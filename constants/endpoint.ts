@@ -1,0 +1,9 @@
+export const REGISTER_STUDENT = 'https://demoapi.nortify.com.ng/api/Student';
+export const ADD_STUDENT_PIX = 'https://demoapi.nortify.com.ng/api/Student/PostBinaryPicture';
+export const GET_LOCAL_GOV = 'https://demoapi.nortify.com.ng/api/Setup/GetAllLocalGovtAreas';
+export const GET_STATES = 'https://demoapi.nortify.com.ng/api/Setup/GetAllStatesAndProvinces';
+export const GET_COUNTRIES = 'https://demoapi.nortify.com.ng/api/Setup/GetAllCountries';
+export const GET_CLASSES = 'https://demoapi.nortify.com.ng/api/ClassArm/GetAll/2';
+export const GET_ACADEMIC_SESSION = 'https://demoapi.nortify.com.ng/api/AcademicSession/GetAll/2';
+export const GET_AUTH_TOKEN = 'https://demoapi.nortify.com.ng/api/token';
+export const LOGIN = 'https://demoapi.nortify.com.ng/api/account/login';

@@ -1,34 +1,62 @@
+import React, { useReducer, useContext, useEffect } from 'react';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import * as React from 'react';
 import { ColorSchemeName } from 'react-native';
-
-import NotFoundScreen from '../screens/NotFoundScreen';
+import { AuthProvider, reducer, initialState, AuthContext } from '../context/AuthContext';
+import {
+	StudentProvider,
+	initialState as studentInitState,
+	reducer as studentReducer
+} from '../context/StudentContext';
+import LoginScreen from '../screens/LoginScreen';
 import { RootStackParamList } from '../types';
 import BottomTabNavigator from './BottomTabNavigator';
 import LinkingConfiguration from './LinkingConfiguration';
+import AsyncStorage from '@react-native-community/async-storage';
 
-// If you are not familiar with React Navigation, we recommend going through the
-// "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
+// this is the app root
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
-  return (
-    <NavigationContainer
-      linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <RootNavigator />
-    </NavigationContainer>
-  );
+	const [ state, dispatch ] = useReducer(reducer, initialState);
+	const [ studentState, studentDispatch ] = useReducer(studentReducer, studentInitState);
+	return (
+		<AuthProvider value={{ state, dispatch }}>
+			<StudentProvider value={{ studentState, studentDispatch }}>
+				<NavigationContainer
+					linking={LinkingConfiguration}
+					theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+				>
+					<RootNavigator />
+				</NavigationContainer>
+			</StudentProvider>
+		</AuthProvider>
+	);
 }
 
-// A root stack navigator is often used for displaying modals on top of all other content
-// Read more here: https://reactnavigation.org/docs/modal
 const Stack = createStackNavigator<RootStackParamList>();
 
-function RootNavigator() {
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Root" component={BottomTabNavigator} />
-      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
-    </Stack.Navigator>
-  );
-}
+const RootNavigator = () => {
+	const { state: { isAuthenticated }, dispatch } = useContext(AuthContext);
+	useEffect(() => {
+		(async () => {
+			try {
+				const userInfoStr = await AsyncStorage.getItem('userInfo');
+				if (userInfoStr) {
+					const userInfo = JSON.parse(userInfoStr);
+					const savedState = { ...userInfo };
+					dispatch({ type: 'LOGIN', payload: savedState });
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		})();
+	}, []);
+	return (
+		<Stack.Navigator screenOptions={{ headerShown: false }}>
+			{isAuthenticated ? (
+				<Stack.Screen name="Root" component={BottomTabNavigator} />
+			) : (
+				<Stack.Screen name="Login" component={LoginScreen} />
+			)}
+		</Stack.Navigator>
+	);
+};
