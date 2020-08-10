@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { StudentInfo, SchoolInfo, ParentInfo } from '../components/forms';
+import {AddStudentScreenNavigationProp} from '../types';
 
-const AddStudentScreen = () => {
+type AddStudentScreenProps = {
+	navigation: AddStudentScreenNavigationProp
+}
+const AddStudentScreen :FC<AddStudentScreenProps> = ({navigation}) => {
 	const [ step, setStep ] = useState(1);
 
 	const onNext = () => {
@@ -18,7 +22,7 @@ const AddStudentScreen = () => {
 	return (
 		<View style={styles.container}>
 			{step === 1 ? (
-				<StudentInfo onNextPress={onNext} onPrevPress={onPrev} />
+				<StudentInfo navigation={navigation} onNextPress={onNext} onPrevPress={onPrev} />
 			) : step === 2 ? (
 				<SchoolInfo onNextPress={onNext} onPrevPress={onPrev} />
 			) : step === 3 ? (

@@ -23,4 +23,5 @@ export type UploadParamList = {
 
 
 export type UploadScreenNavigationProp = StackNavigationProp<UploadParamList, 'Uploads'>
+export type AddStudentScreenNavigationProp = StackNavigationProp<UploadParamList, 'AddStudent'>
 
