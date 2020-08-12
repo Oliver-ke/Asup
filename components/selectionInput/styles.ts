@@ -2,31 +2,19 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
 	container: {
-		marginVertical: 15,
-		borderBottomWidth: 1,
-		borderColor: '#ccc',
-		color: 'black'
-	},
-	label: {
-		marginBottom: 10,
-		color: 'rgba(0,0,0,0.6)',
-		fontSize: 16
-	},
-	inputIOS: {
-		fontSize: 16,
-		paddingVertical: 12,
-		paddingHorizontal: 10,
-		borderWidth: 1,
-		borderColor: 'gray',
-		borderRadius: 4,
-		color: 'black',
-		paddingRight: 30 // to ensure the text is never behind the icon
-	},
-	inputAndroid: {
-		fontSize: 16
+		marginVertical: 0,
     },
-    iconStyle: {
-        top: -10,
-        right: 4,
-    }
+    pickerContainer: {
+        borderWidth: 1,
+        borderRadius: 5,
+        borderColor: '#ccc',
+        marginBottom: 20
+    },
+	label: {
+        marginBottom: 7,
+        color: 'rgba(45, 34, 84, 0.7)',
+        fontFamily: 'lato',
+        fontWeight: 'bold',
+        fontSize: 17
+    },
 });

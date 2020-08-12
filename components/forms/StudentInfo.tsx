@@ -1,16 +1,19 @@
 import React, { FC, ReactElement, useState, ReactText } from 'react';
-import { View,Picker } from 'react-native';
-import { StepHandlerProps } from './types';
+import { View } from 'react-native';
+import { StudentInfoProps } from './types';
 import { Text } from 'react-native-elements';
 import TextInput from '../textInput/TextInput';
 import Button from '../Button/Button';
 import styles from './styles';
-//import {Picker} from '@react-native-community/picker';
+import SelectionInput from '../selectionInput/SelectionInput';
+import DatePicker from '../datePicker/DatePicker';
+import { ScrollView } from 'react-native-gesture-handler';
 
-const StudentInfo: FC<StepHandlerProps> = ({ onNextPress, navigation }): ReactElement => {
-	const [gender, setGender] = useState<ReactText>('java');
+const StudentInfo: FC<StudentInfoProps> = ({ onNextPress, navigation, states, localGov, countries }): ReactElement => {
+	console.log(states);
 	return (
 		<View style={styles.container}>
+			<ScrollView contentContainerStyle={styles.scrollContainer}>
 			<Text h4Style={styles.headerText} h4>
 				Student Details
 			</Text>
@@ -18,15 +21,8 @@ const StudentInfo: FC<StepHandlerProps> = ({ onNextPress, navigation }): ReactEl
 				<TextInput placeholder="enter student first name" label="First Name" />
 				<TextInput placeholder="enter student last name" label="Last Name" />
 				<TextInput placeholder="student other names" label="Other Name" />
-				<Picker
-                    selectedValue={gender}
-					style={{height: 50, width: 100}}
-					onValueChange={(itemValue, itemIndex) =>
-					setGender(itemValue)
-                   }>
-					<Picker.Item label="Java" value="java" />
-					<Picker.Item label="JavaScript" value="js" />
-				</Picker>
+				<SelectionInput label="Gender" options={[{label: 'Male', value:'Male'}, {label: 'Female', value:'Female'}]} />
+				<DatePicker lable="Date of Birth" onChangeHandler={(val) => console.log(val)} />
 			</View>
 			<View style={styles.controls}>
 				<Button
@@ -46,6 +42,7 @@ const StudentInfo: FC<StepHandlerProps> = ({ onNextPress, navigation }): ReactEl
 					iconRight={true}
 				/>
 			</View>
+			</ScrollView>
 		</View>
 	);
 };

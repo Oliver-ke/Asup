@@ -11,7 +11,7 @@ import DashboardNavigator from './DashboardNavigator';
 import UploadNavigator from './UploadNavigator';
 
 // Only screen
-import ProfileScreen from '../screens/ProfileScreen';
+import { ProfileScreen } from '../screens';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 

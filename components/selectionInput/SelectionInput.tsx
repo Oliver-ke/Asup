@@ -1,31 +1,23 @@
-import React, { FC } from 'react';
+import React, { FC, useState, ReactText } from 'react';
 import { Text, View } from 'react-native';
 import styles from './styles';
-import { Entypo } from '@expo/vector-icons';
-import RNPickerSelect from 'react-native-picker-select';
 import { SelectProps } from './types';
+import { Picker } from '@react-native-community/picker';
 
 const SelectionInput: FC<SelectProps> = ({ options, setFieldValue, label }) => {
+	const [ gender, setGender ] = useState<ReactText>('Java');
 	return (
 		<View style={styles.container}>
 			<Text style={styles.label}>{label}</Text>
-			<RNPickerSelect
-				onValueChange={(e) => console.log(e) }
-				style={{
-					...styles.inputAndroid,
-					iconContainer: styles.iconStyle
-				}}
-				placeholder={{
-					label: `select ${label.toLowerCase()}`,
-					value: null,
-					color: 'rgba(0,0,0,0.6)'
-				}}
-				Icon={() => {
-					return <Entypo name="chevron-small-down" size={24} color="gray" />;
-				}}
-				useNativeAndroidPickerStyle={false}
-				items={options}
-			/>
+			<View style={styles.pickerContainer}>
+				<Picker
+					selectedValue={gender}
+					style={{ height: 43, width: '100%'}}
+					onValueChange={(itemValue, itemIndex) => setGender(itemValue)}
+				>
+					{options.map(({ label, value }, idx) => <Picker.Item key={idx} label={label} value={value} />)}
+				</Picker>
+			</View>
 		</View>
 	);
 };

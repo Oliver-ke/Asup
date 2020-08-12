@@ -2,8 +2,17 @@ import axios from 'axios';
 import { GET_ACADEMIC_SESSION, GET_CLASSES, GET_STATES, GET_LOCAL_GOV, GET_COUNTRIES } from '../constants/endpoint';
 import AsyncStorage from '@react-native-community/async-storage';
 
-// SET Registation assets
+// Helper method to manipulate data
+const sanitizeClasses = (classes) => {};
 
+const sanitizeState = (states: object[]) => {
+	const newStates = states.map(({ name, id }) => {
+		return { label: name, value: id };
+	});
+	return newStates;
+};
+
+// SET Registation assets
 export const prepareRegAssets = async (schoolId: number, token: string) => {
 	// check if item already exist in storage before fire
 	// TODO: you need to fetch classes and accademic session as this can change anytime
@@ -29,12 +38,12 @@ export const prepareRegAssets = async (schoolId: number, token: string) => {
 		await AsyncStorage.setItem('assets', JSON.stringify(payload));
 		return { success: true, assets: payload };
 	} catch (error) {
-		console.log(error);
-		return { success: false, error: error.message };
+		console.log(error, 'this should be an axios error');
+		return { success: false, error: error };
 	}
 };
 
-// assests shape
+// assests shape, classes, states, localGov, countries
 /**
  * assets = {
  *   accademicSession: {},

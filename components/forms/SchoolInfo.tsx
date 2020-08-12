@@ -1,9 +1,10 @@
 import React, { FC, ReactElement } from 'react';
 import { View, Text } from 'react-native';
-import { StepHandlerProps } from './types';
+import {SchoolInfoProps } from './types';
 import {Button} from 'react-native-elements';
 
-const SchoolInfo: FC<StepHandlerProps>  = ({ onNextPress, onPrevPress }): ReactElement => {
+const SchoolInfo: FC<SchoolInfoProps>  = ({ onNextPress, onPrevPress, classes }): ReactElement => {
+	console.log(classes);
 	return (
 		<View>
 			<Text>This is the schoolinfo form</Text>

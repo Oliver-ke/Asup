@@ -5,7 +5,11 @@ export default StyleSheet.create({
 		flex: 1,
 		paddingTop: 20,
 		width: '100%',
-		paddingHorizontal: 15
+		
+	},
+	scrollContainer: {
+		paddingHorizontal: 15,
+		paddingBottom: 20
 	},
 	headerText: {
 		fontSize: 20,
@@ -14,6 +18,6 @@ export default StyleSheet.create({
 	controls: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
-		marginTop: 20
+		marginBottom: 20
 	}
 });

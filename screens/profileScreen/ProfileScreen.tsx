@@ -1,13 +1,12 @@
 import React, { useContext } from 'react';
-import constants from 'expo-constants';
-import colors from '../constants/Colors';
+import colors from '../../constants/Colors';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet } from 'react-native';
-import { Text, View } from '../components/Themed';
+import { Text, View } from '../../components/Themed';
 import { Feather } from '@expo/vector-icons'; 
 import { Button } from 'react-native-elements';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../../context/AuthContext';
 import AsyncStorage from '@react-native-community/async-storage';
+import styles from './styles';
 
 const Profile = () => {
 	const { state, dispatch } = useContext(AuthContext);
@@ -55,59 +54,5 @@ const Profile = () => {
 	);
 };
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		marginTop: constants.statusBarHeight
-	},
-	header: {
-		padding: 20,
-		backgroundColor: colors.light.primaryColor,
-		justifyContent: 'center',
-		flex: 1
-	},
-	headerText: {
-		fontSize: 20,
-		color: '#fff',
-		textAlign: 'center'
-	},
-	iconWrapper: {
-		backgroundColor: '#F7F7F7',
-		justifyContent: 'center',
-		flexDirection: 'row',
-		marginBottom: 30
-	},
-	fieldContainer: {
-		marginBottom: 5,
-		backgroundColor: '#F7F7F7',
-		flex: 9,
-		justifyContent: 'center',
-		paddingHorizontal: 20
-	},
-	formContainer: {
-		backgroundColor: '#fff',
-		paddingHorizontal: 15,
-		paddingVertical: 25,
-		borderRadius: 10
-	},
-	fieldWrapper: {
-		flexDirection: 'row',
-		width: '100%',
-		borderBottomWidth: 1,
-		borderBottomColor: '#eee',
-		paddingVertical: 20,
-		paddingHorizontal: 10
-	},
-	text: {
-		fontSize: 18,
-		fontFamily: 'lato',
-		color: 'rgba(0,0,0,0.6)'
-	},
-	separator: {
-		marginVertical: 30,
-		height: 1,
-		width: '80%'
-	},
-});
 
 export default Profile;

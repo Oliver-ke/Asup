@@ -1,17 +1,17 @@
 import React, { useState, useContext } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import constants from 'expo-constants';
-import colors from '../constants/Colors';
-import { LOGIN } from '../constants/endpoint';
+import colors from '../../constants/Colors';
+import { LOGIN } from '../../constants/endpoint';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { Buffer } from 'buffer';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Button, Image, Input, Text } from 'react-native-elements';
-import {AuthContext} from '../context/AuthContext';
+import {AuthContext} from '../../context/AuthContext';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
+import styles from './styles';
 
 const LoginScreen = () => {
 	const [ formInput, setFormInput ] = useState({
@@ -62,7 +62,7 @@ const LoginScreen = () => {
 				<Image
 					resizeMode="center"
 					style={{ width: 100, height: 100 }}
-					source={require('../assets/images/logo.png')}
+					source={require('../../assets/images/logo.png')}
 				/>
 			</View>
 			<KeyboardAwareScrollView contentContainerStyle={{ flex: 6 }}>
@@ -124,30 +124,5 @@ const LoginScreen = () => {
 	);
 };
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: '#fff',
-		marginTop: constants.statusBarHeight
-	},
-	header: {
-		backgroundColor: colors.light.primaryColor,
-		paddingVertical: 10,
-		justifyContent: 'center',
-		paddingHorizontal: 10,
-		alignContent: 'center',
-		flexDirection: 'row',
-		height: 100,
-		borderBottomLeftRadius: 7,
-		borderBottomRightRadius: 7
-	},
-	formInput: {
-		justifyContent: 'center',
-		paddingHorizontal: 15,
-		alignContent: 'center',
-		height: '100%',
-		backgroundColor: '#F7F7F7'
-	}
-});
 
 export default LoginScreen;

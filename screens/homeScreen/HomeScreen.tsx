@@ -1,16 +1,15 @@
 import React, { useContext } from 'react';
-import constants from 'expo-constants';
 import { StatusBar } from 'expo-status-bar';
 import { View, FlatList } from 'react-native';
 import { Text } from 'react-native-elements';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { StyleSheet } from 'react-native';
-import colors from '../constants/Colors';
-import { AuthContext } from '../context/AuthContext';
-import StudentCard from '../components/studentCard/StudentCard';
-import students from '../mockData/students';
-import SearchInput from '../components/searchInput/SearchInput';
+import colors from '../../constants/Colors';
+import { AuthContext } from '../../context/AuthContext';
+import StudentCard from '../../components/studentCard/StudentCard';
+import students from '../../mockData/students';
+import SearchInput from '../../components/searchInput/SearchInput';
 
+import styles from './styles';
 const HomeScreen = () => {
 	const { state: { schoolCode } } = useContext(AuthContext);
 	return (
@@ -40,39 +39,6 @@ const HomeScreen = () => {
 	);
 };
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		marginTop: constants.statusBarHeight
-	},
-	header: {
-		backgroundColor: colors.light.primaryColor,
-		height: 95,
-		width: '100%',
-		paddingHorizontal: 10,
-		justifyContent: 'center'
-	},
-	welcomeTxt: {
-		fontSize: 16,
-		color: '#ccc',
-		fontWeight: 'normal',
-		marginBottom: 10
-	},
-	welcomeTxtBold: {
-		color: colors.light.secondaryColor
-	},
-	mainTitlWrapper: {
-		flexDirection: 'row',
-		marginTop: 10,
-		paddingVertical: 10
-	},
-	mainText: {
-		fontSize: 20,
-		color: 'rgba(0,0,0,0.8)',
-		fontFamily: 'lato',
-		marginRight: 10,
-		marginLeft: 10
-	}
-});
+
 export default HomeScreen;
 
