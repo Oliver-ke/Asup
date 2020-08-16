@@ -4,11 +4,50 @@ export const StudentContext = createContext<any | undefined>(undefined);
 export const StudentProvider = StudentContext.Provider;
 export const Consumer = StudentContext.Consumer;
 
-export let initialState = {
-	studentInfo: {},
-	parentInfo: {},
-	schoolInfo: {},
-	uploaded: false
+export const initialState = {
+	studentInfo: {
+		StudentNo: "XXXXXXXXXX",
+		SchoolCode: '',
+		LastName: '',
+		FirstName: '',
+		OtherName: '',
+		Gender: 'Male',
+		DateOfBirth: new Date(),
+		NationalityID: 156,
+		StateOfOriginID: '',
+		LGAOfOriginID: ''
+	},
+	parentInfo: {
+		GuardianFirstName: '',
+		GuardianLastName: '',
+		GuardianOtherName: '',
+		GuardianGender: 'Male',
+		GuardianPhoneNo: '',
+		GuardianEmailAddress: '',
+		GuardianRelationship: 'Uncle',
+		GuardianAddress: ''
+	},
+	schoolInfo: {
+		AdmissionDate: new Date(),
+		ClassAdmittedID: '1',
+		TermAdmitted: '1',
+		YearOfAdmission: '',
+		CurrentClassID: '1'
+	},
+	studentPix: {
+		SchoolCode: '',
+		StudentNo: '',
+		ImageData: ''
+	},
+	updateData: false
+};
+
+export const studentTypes = {
+	SET_STUDENT_INFO: 'SET_STUDENT_INFO',
+	SET_PARENT_INFO: 'SET_PARENT_INFO',
+	SET_SCHOOL_INFO: 'SET_SCHOOL_INFO',
+	SET_STUDENT_PIX: 'SET_STUDENT_PIX',
+	RESET_DATA: 'RESET_DATA'
 };
 
 export const reducer = (state: any, action: any) => {
@@ -28,6 +67,13 @@ export const reducer = (state: any, action: any) => {
 				...state,
 				schoolInfo: { ...action.payload }
 			};
+		case 'SET_STUDENT_PIX':
+			return {
+				...state,
+				studentPix: { ...action.payload }
+			};
+		case 'RESET_DATA':
+			return initialState;
 		default:
 			return state;
 	}

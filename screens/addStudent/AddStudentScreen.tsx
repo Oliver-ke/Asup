@@ -1,9 +1,12 @@
 import React, { useState, FC, useEffect, useContext } from 'react';
 import { View } from 'react-native';
 import { AuthContext } from '../../context/AuthContext';
+import { StudentContext, studentTypes } from '../../context/StudentContext';
 import { prepareRegAssets } from '../../util/storageUtil';
-import { StudentInfo, SchoolInfo, ParentInfo } from '../../components/forms';
+import { StudentInfo, SchoolInfo, ParentInfo, StudentPix } from '../../components/forms';
 import { AddStudentScreenNavigationProp } from '../../types';
+import SubmitModal from '../../components/submitModal/SubmitModal';
+import { uploadNow } from '../../util/uploadHandler';
 import styles from './styles';
 
 type AddStudentScreenProps = {
@@ -12,14 +15,19 @@ type AddStudentScreenProps = {
 
 const AddStudentScreen: FC<AddStudentScreenProps> = ({ navigation }) => {
 	const [ step, setStep ] = useState(1);
+	const [ showSubmitModal, setShowSubmitModal ] = useState(false);
+
 	const [ regAssets, setRegAssets ] = useState({
-		accademicSession: {},
-		classes: {},
-		states: {},
-		localGov: {},
-		countries: {}
+		accademicSession: [],
+		classes: [],
+		states: [],
+		localGov: []
 	});
+
 	const { state: { schoolID, authToken } } = useContext(AuthContext);
+	const { studentDispatch, studentState: { studentInfo, parentInfo, schoolInfo, studentPix } } = useContext(
+		StudentContext
+	);
 
 	// get registration assets
 	useEffect(() => {
@@ -32,20 +40,43 @@ const AddStudentScreen: FC<AddStudentScreenProps> = ({ navigation }) => {
 	}, []);
 
 	const onNext = () => {
-		if (step <= 2) {
+		if (step <= 3) {
 			setStep(step + 1);
+		}
+		if (step === 4) {
+			setShowSubmitModal(true);
 		}
 	};
 	const onPrev = () => {
-		if (step > 1 && step <= 3) {
+		if (step > 1 && step <= 4) {
 			return setStep(step - 1);
 		}
 	};
+
+	const handleUploadPress = async () => {
+		const dataPayload = { ...studentInfo, ...schoolInfo, ...parentInfo };
+		try {
+			const res = await uploadNow(dataPayload, studentPix, authToken);
+			studentDispatch({ type: studentTypes.RESET_DATA });
+			console.log(res);
+			setShowSubmitModal(false);
+			navigation.navigate('Uploads');
+		} catch (error) {
+			console.log(error);
+			// show error
+		}
+	};
+	const handleSavePress = () => {
+		const dataPayload = { ...studentInfo, ...schoolInfo, ...parentInfo };
+		console.log(dataPayload);
+		studentDispatch({ type: studentTypes.RESET_DATA });
+		setShowSubmitModal(false);
+	};
+
 	return (
 		<View style={styles.container}>
 			{step === 1 ? (
 				<StudentInfo
-					countries={regAssets.countries}
 					localGov={regAssets.localGov}
 					states={regAssets.states}
 					navigation={navigation}
@@ -53,10 +84,19 @@ const AddStudentScreen: FC<AddStudentScreenProps> = ({ navigation }) => {
 					onPrevPress={onPrev}
 				/>
 			) : step === 2 ? (
-				<SchoolInfo classes={regAssets.classes} onNextPress={onNext} onPrevPress={onPrev} />
+				<SchoolInfo
+					classes={regAssets.classes}
+					accademicSession={regAssets.accademicSession}
+					onNextPress={onNext}
+					onPrevPress={onPrev}
+				/>
 			) : step === 3 ? (
 				<ParentInfo onNextPress={onNext} onPrevPress={onPrev} />
+			) : step === 4 ? (
+				<StudentPix onNextPress={onNext} onPrevPress={onPrev} />
 			) : null}
+
+			<SubmitModal onSavePress={handleSavePress} onUploadPress={handleUploadPress} showModal={showSubmitModal} />
 		</View>
 	);
 };

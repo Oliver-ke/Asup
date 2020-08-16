@@ -6,12 +6,18 @@ export type StepHandlerProps = {
 	navigation?: AddStudentScreenNavigationProp;
 };
 
+export type optionType = {
+	label: string;
+	value: any;
+	stateID?: number;
+}
+
 export interface StudentInfoProps extends StepHandlerProps {
-	states: object,
-	localGov: object,
-	countries: object
+	states: optionType[],
+	localGov: optionType[],
 } 
 
 export interface SchoolInfoProps extends StepHandlerProps {
-	classes: object
+	classes: optionType[],
+	accademicSession: optionType[]
 }
