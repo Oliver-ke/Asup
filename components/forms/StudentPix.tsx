@@ -16,7 +16,7 @@ const StudentPix: FC<StepHandlerProps> = ({ onPrevPress, onNextPress }): ReactEl
 	const handleImageSelected = (img: any) => {
 		setSelectedImage(img);
 	};
-	const onComplete = () => {
+	const onComplete = async () => {
 		const payload = { ...studentPix, ImageData: selectedImage, SchoolCode: schoolCode };
 		studentDispatch({ type: studentTypes.SET_STUDENT_PIX, payload });
 		onNextPress && onNextPress();

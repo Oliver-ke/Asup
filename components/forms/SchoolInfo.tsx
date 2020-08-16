@@ -17,6 +17,7 @@ const termAdmitted = [
 const SchoolInfo: FC<SchoolInfoProps> = ({ onNextPress, onPrevPress, classes, accademicSession }): ReactElement => {
 	const { studentDispatch, studentState: { schoolInfo } } = useContext(StudentContext);
 	const [ inputs, setInputs ] = useState({...schoolInfo});
+	console.log(accademicSession);
 	const onInputChange = (name: string, value: any) => setInputs({ ...inputs, [name]: value });
 	const onComplete = () => {
 		console.log(inputs);

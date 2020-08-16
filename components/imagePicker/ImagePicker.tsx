@@ -22,14 +22,13 @@ const CustomImagePicker: FC<imagePickerProps> = ({initialValue, onImageSelected}
 		try {
 			let result = await ImagePicker.launchImageLibraryAsync({
 				mediaTypes: ImagePicker.MediaTypeOptions.Images,
-				base64: true,
 				allowsEditing: false,
 				aspect: [ 4, 3 ],
 				quality: 1
 			});
 			if (!result.cancelled) {
-                setImage(result.base64);
-                onImageSelected(result.base64);
+                setImage(result.uri);
+                onImageSelected(result.uri);
 			}
 		} catch (err) {
 			console.log(err);
@@ -43,7 +42,7 @@ const CustomImagePicker: FC<imagePickerProps> = ({initialValue, onImageSelected}
 	return (
 		<View style={{ alignItems: 'center', justifyContent: 'center' }}>
 			{image ? (
-				<Avatar size={170} containerStyle={styles.avaterImg} rounded source={{ uri: 'data:image/jpeg;base64,' + image }} />
+				<Avatar size={170} containerStyle={styles.avaterImg} rounded source={{ uri: image }} />
 			) : (
 				<View style={styles.imgContainer}>
 					<Image

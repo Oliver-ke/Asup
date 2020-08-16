@@ -6,7 +6,8 @@ import { prepareRegAssets } from '../../util/storageUtil';
 import { StudentInfo, SchoolInfo, ParentInfo, StudentPix } from '../../components/forms';
 import { AddStudentScreenNavigationProp } from '../../types';
 import SubmitModal from '../../components/submitModal/SubmitModal';
-import { uploadNow } from '../../util/uploadHandler';
+import { uploadNow, clearStorage } from '../../util/uploadHandler';
+import storageLogger from '../../util/storageLogger';
 import styles from './styles';
 
 type AddStudentScreenProps = {
@@ -35,7 +36,9 @@ const AddStudentScreen: FC<AddStudentScreenProps> = ({ navigation }) => {
 			const res = await prepareRegAssets(schoolID, authToken);
 			if (res && res.assets) {
 				setRegAssets(res.assets);
-			}
+				await clearStorage();
+				storageLogger();
+			}	
 		})();
 	}, []);
 
