@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useState, useContext, useEffect } from 'react';
+import React, { FC, ReactElement, useState, useContext} from 'react';
 import { View, ScrollView } from 'react-native';
 import { Text } from 'react-native-elements';
 import { SchoolInfoProps } from './types';
@@ -17,7 +17,6 @@ const termAdmitted = [
 const SchoolInfo: FC<SchoolInfoProps> = ({ onNextPress, onPrevPress, classes, accademicSession }): ReactElement => {
 	const { studentDispatch, studentState: { schoolInfo } } = useContext(StudentContext);
 	const [ inputs, setInputs ] = useState({...schoolInfo});
-	console.log(accademicSession);
 	const onInputChange = (name: string, value: any) => setInputs({ ...inputs, [name]: value });
 	const onComplete = () => {
 		console.log(inputs);

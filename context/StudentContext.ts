@@ -29,10 +29,10 @@ export const initialState = {
 	},
 	schoolInfo: {
 		AdmissionDate: new Date(),
-		ClassAdmittedID: '1',
-		TermAdmitted: '1',
+		ClassAdmittedID: 1,
+		TermAdmitted: 1,
 		YearOfAdmission: '',
-		CurrentClassID: '1'
+		CurrentClassID: 1
 	},
 	studentPix: {
 		SchoolCode: '',

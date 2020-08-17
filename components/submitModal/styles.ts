@@ -25,5 +25,8 @@ export default StyleSheet.create({
 		marginTop: 30,
 		justifyContent: 'space-around',
 		width: '100%'
+	},
+	loadingTxt: {
+		marginTop: 10
 	}
 });

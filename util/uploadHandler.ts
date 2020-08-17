@@ -5,14 +5,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { REGISTER_STUDENT, ADD_STUDENT_PIX } from '../constants/endpoint';
 
 
-// some types to get things up
-type StudentPix = {
-    SchoolCode:  string;
-	StudentNo: string | number;
-	ImageData: string;
-}
-
-
 // Async util functions
 export const clearStorage = async () => {
      await AsyncStorage.multiRemove(['uploadWaiting', 'uploadComplete']);
@@ -47,6 +39,26 @@ export const removeItemFromStorage = async (id: string, key: string) => {
 	throw new Error(`No item in ${key}`);
 };
 
+export const getItemsFromStorage = async (key: string) => {
+	const itemsJson = await AsyncStorage.getItem(key);
+	if(itemsJson){
+		return JSON.parse(itemsJson);
+	}
+	return [];
+};
+
+// ---------- Save for Upload later
+
+export const saveForLater = async (payload: object, studentPix: object) => {
+    const uploadID = await nanoid();
+    try {
+		await addItemToStorage({ ...payload, uploadID, studentPix, uploaded: false }, 'uploadWaiting');
+    } catch (error) {
+        console.log('Error saving upload for later')
+    }
+}
+
+
 // ------------ Upload Function -----------------
 const axiosConfig = {
 	headers: {
@@ -71,7 +83,7 @@ export const uploadFromAwaiting = async (id: string, token: string) => {
 					if (pixRes && pixRes.responseCode === '00') {
 						// update
 						await removeItemFromStorage(uploadID, 'uploadWaiting');
-						await addItemToStorage(selectedUploadArr[0], 'uploadComplete');
+						await addItemToStorage({...selectedUploadArr[0], uploaded: true}, 'uploadComplete');
 						return { result: data, success: true };
 					}
 					throw new Error('Error adding student picture');
@@ -92,10 +104,7 @@ export const uploadNow = async (payload: object, studentPix: any, token: string)
 	axiosConfig.headers.Authorization = `Bearer ${token}`;
 	try {
 		// save item to awaiting uploads first
-		await addItemToStorage({ ...payload, uploadID, studentPix }, 'uploadWaiting');
-        // post student data
-        console.log(payload);
-        console.log(axiosConfig);
+		await addItemToStorage({ ...payload, uploadID, uploaded:false, studentPix }, 'uploadWaiting');
 		const { data } = await axios.post(REGISTER_STUDENT, payload, axiosConfig);
 		if (data && data.responseMessage === 'Successful') {
             const { studentNo } = data;
@@ -105,23 +114,22 @@ export const uploadNow = async (payload: object, studentPix: any, token: string)
             const imgBase64 = await FileSystem.readAsStringAsync(ImageData, {encoding: FileSystem.EncodingType.Base64});
 			const pixPayload = { ...studentPix, studentNo, ImageData: imgBase64 };
             // post pix
-            console.log(pixPayload);
 			const { data: pixRes } = await axios.post(ADD_STUDENT_PIX, pixPayload, axiosConfig);
 			if (pixRes && pixRes.responseCode === '00') {
 				// update
 				await removeItemFromStorage(uploadID, 'uploadWaiting');
-				await addItemToStorage({ ...payload, uploadID, studentPix }, 'uploadComplete');
+				await addItemToStorage({ ...payload, uploadID, studentPix, uploaded:true }, 'uploadComplete');
 				return { result: data, success: true };
 			}
 			throw new Error('Picture Upload Failed');
 		}
 		throw new Error('Student Registration Failed');
 	} catch (error) {
+		await removeItemFromStorage(uploadID, 'uploadWaiting');
 		console.log(error);
 		return { error, success: false };
 	}
 };
-
 
 
 /**

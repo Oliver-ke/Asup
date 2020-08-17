@@ -29,7 +29,7 @@ const HomeScreen = () => {
 					<MaterialCommunityIcons name="upload-outline" size={24} color={colors.light.secondaryColor} />
 				</View>
 				<FlatList
-					data={students}
+					data={[]}
 					keyExtractor={(item) => item.id.toString()}
 					renderItem={({ item }) => <StudentCard student={item} />}
 					contentContainerStyle={{ paddingHorizontal: 10, flexGrow: 1 }}

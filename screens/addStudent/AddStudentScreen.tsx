@@ -1,12 +1,12 @@
 import React, { useState, FC, useEffect, useContext } from 'react';
-import { View } from 'react-native';
+import { View, Alert } from 'react-native';
 import { AuthContext } from '../../context/AuthContext';
 import { StudentContext, studentTypes } from '../../context/StudentContext';
 import { prepareRegAssets } from '../../util/storageUtil';
 import { StudentInfo, SchoolInfo, ParentInfo, StudentPix } from '../../components/forms';
 import { AddStudentScreenNavigationProp } from '../../types';
 import SubmitModal from '../../components/submitModal/SubmitModal';
-import { uploadNow, clearStorage } from '../../util/uploadHandler';
+import { uploadNow, saveForLater } from '../../util/uploadHandler';
 import storageLogger from '../../util/storageLogger';
 import styles from './styles';
 
@@ -17,7 +17,7 @@ type AddStudentScreenProps = {
 const AddStudentScreen: FC<AddStudentScreenProps> = ({ navigation }) => {
 	const [ step, setStep ] = useState(1);
 	const [ showSubmitModal, setShowSubmitModal ] = useState(false);
-
+	const [ uploadLoading, setUploadLoading ] = useState(false);
 	const [ regAssets, setRegAssets ] = useState({
 		accademicSession: [],
 		classes: [],
@@ -36,9 +36,9 @@ const AddStudentScreen: FC<AddStudentScreenProps> = ({ navigation }) => {
 			const res = await prepareRegAssets(schoolID, authToken);
 			if (res && res.assets) {
 				setRegAssets(res.assets);
-				await clearStorage();
+				studentDispatch({ type: studentTypes.RESET_DATA });
 				storageLogger();
-			}	
+			}
 		})();
 	}, []);
 
@@ -59,21 +59,41 @@ const AddStudentScreen: FC<AddStudentScreenProps> = ({ navigation }) => {
 	const handleUploadPress = async () => {
 		const dataPayload = { ...studentInfo, ...schoolInfo, ...parentInfo };
 		try {
-			const res = await uploadNow(dataPayload, studentPix, authToken);
-			studentDispatch({ type: studentTypes.RESET_DATA });
-			console.log(res);
-			setShowSubmitModal(false);
-			navigation.navigate('Uploads');
+			setUploadLoading(true);
+			const { success } = await uploadNow(dataPayload, studentPix, authToken);
+			if (success) {
+				studentDispatch({ type: studentTypes.RESET_DATA });
+				setUploadLoading(false);
+				setShowSubmitModal(false);
+				Alert.alert('Upload Status', 'Uploading Student Successful');
+				navigation.navigate('Uploads');
+			}
+			throw new Error('Upload Failed');
 		} catch (error) {
 			console.log(error);
+			setUploadLoading(false);
+			setShowSubmitModal(false);
+			Alert.alert('Upload Status', 'Error Making Upload');
 			// show error
 		}
 	};
-	const handleSavePress = () => {
+
+	const handleSavePress = async() => {
 		const dataPayload = { ...studentInfo, ...schoolInfo, ...parentInfo };
-		console.log(dataPayload);
-		studentDispatch({ type: studentTypes.RESET_DATA });
-		setShowSubmitModal(false);
+		try {
+			setUploadLoading(true);
+			await saveForLater(dataPayload, studentPix);
+			studentDispatch({ type: studentTypes.RESET_DATA });
+			setUploadLoading(false);
+			setShowSubmitModal(false);
+			Alert.alert('Upload Status', 'Upload Successfully Saved for Later');
+		    navigation.navigate('Uploads');
+		} catch (error) {
+			console.log(error);
+			setUploadLoading(false);
+			setShowSubmitModal(false);
+			Alert.alert('Upload Status', 'Error Saving Upload');
+		}
 	};
 
 	return (
@@ -99,7 +119,12 @@ const AddStudentScreen: FC<AddStudentScreenProps> = ({ navigation }) => {
 				<StudentPix onNextPress={onNext} onPrevPress={onPrev} />
 			) : null}
 
-			<SubmitModal onSavePress={handleSavePress} onUploadPress={handleUploadPress} showModal={showSubmitModal} />
+			<SubmitModal
+				isLoading={uploadLoading}
+				onSavePress={handleSavePress}
+				onUploadPress={handleUploadPress}
+				showModal={showSubmitModal}
+			/>
 		</View>
 	);
 };

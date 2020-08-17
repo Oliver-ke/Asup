@@ -1,6 +1,7 @@
 import { ImageProps } from "react-native"
 
 export type StudentType = {
+	uploadID: string;
 	StudentNo: string;
 	SchoolCode: string;
 	LastName: string;
@@ -23,10 +24,13 @@ export type StudentType = {
 	GuardianPhoneNo: string;
 	GuardianEmailAddress: string;
 	GuardianRelationship: string;
-    GuardianAddress: string;
-    ImageData: ImageProps;
-    status?: string;
-	id?: number
+	GuardianAddress: string;
+	uploaded: boolean;
+    studentPix: {
+		SchoolCode: string;
+		StudentNo: string;
+		ImageData: string
+	}
 }
 
 export type StudentCardProp = {

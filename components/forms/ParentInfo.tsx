@@ -43,7 +43,7 @@ const ParentInfo: FC<StepHandlerProps> = ({ onNextPress, onPrevPress }): ReactEl
 				<TextInput value={inputs.GuardianLastName} onChangeText={(val) => onInputChange('GuardianLastName', val)} placeholder="enter guardian last name" label="Last Name" />
 				<TextInput value={inputs.GuardianOtherName} onChangeText={(val) => onInputChange('GuardianOtherName', val)} placeholder="enter guardian other name" label="Other Name" />
 				<SelectionInput selectedValue={inputs.GuardianGender} setFieldValue={(val) => onInputChange('GuardianGender', val)} label="guardian gender" options={genderOptions} />
-				<TextInput value={inputs.GuardianPhoneNo} keyboardType="numeric" onChangeText={(val) => onInputChange('GuardianPhoneNo', val)} placeholder="enter guardian phone number" label="Phone Number" />
+				<TextInput value={inputs.GuardianPhoneNo} keyboardType="numeric"  onChangeText={(val) => onInputChange('GuardianPhoneNo', val)} placeholder="enter guardian phone number" label="Phone Number" />
 				<TextInput value={inputs.GuardianEmailAddress} onChangeText={(val) => onInputChange('GuardianEmailAddress', val)} placeholder="enter guardian email address" label="Email Address" />
 				<SelectionInput selectedValue={inputs.YearOfAdmission} setFieldValue={(val) => onInputChange('GuardianRelationship', val)} label="relationship with student" options={GuardianRelation} />
 				<TextInput value={inputs.GuardianAddress} onChangeText={(val) => onInputChange('GuardianAddress', val)} placeholder="enter guardian house address" label="House Address" />
@@ -62,7 +62,7 @@ const ParentInfo: FC<StepHandlerProps> = ({ onNextPress, onPrevPress }): ReactEl
 					iconContainerStyle={{ top: 2, left: 5 }}
 					containerStyle={{ width: '45%' }}
 					onPress={onComplete}
-					title="Upload"
+					title="Next"
 					iconRight={true}
 				/>
 			</View>
