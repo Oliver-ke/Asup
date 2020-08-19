@@ -4,12 +4,11 @@ import { nanoid } from 'nanoid/async/index';
 import AsyncStorage from '@react-native-community/async-storage';
 import { REGISTER_STUDENT, ADD_STUDENT_PIX } from '../constants/endpoint';
 
-
 // Async util functions
 export const clearStorage = async () => {
-     await AsyncStorage.multiRemove(['uploadWaiting', 'uploadComplete']);
-     return console.log('Items cleared');
-}
+	await AsyncStorage.multiRemove([ 'uploadWaiting', 'uploadComplete' ]);
+	return console.log('Items cleared');
+};
 
 export const addItemToStorage = async (newItem: object, key: string) => {
 	const pack = await AsyncStorage.getItem(key);
@@ -41,23 +40,32 @@ export const removeItemFromStorage = async (id: string, key: string) => {
 
 export const getItemsFromStorage = async (key: string) => {
 	const itemsJson = await AsyncStorage.getItem(key);
-	if(itemsJson){
+	if (itemsJson) {
 		return JSON.parse(itemsJson);
 	}
 	return [];
 };
 
+export const getItemFromStorage = async (uploadID: string, key: string) => {
+	const itemsJson = await AsyncStorage.getItem(key);
+	if (itemsJson) {
+		const allItems = JSON.parse(itemsJson);
+		const choosenItem = allItems.filter((item: any) => item.uploadID === uploadID)[0];
+		return choosenItem;
+	}
+	return null;
+};
+
 // ---------- Save for Upload later
 
 export const saveForLater = async (payload: object, studentPix: object) => {
-    const uploadID = await nanoid();
-    try {
+	const uploadID = await nanoid();
+	try {
 		await addItemToStorage({ ...payload, uploadID, studentPix, uploaded: false }, 'uploadWaiting');
-    } catch (error) {
-        console.log('Error saving upload for later')
-    }
-}
-
+	} catch (error) {
+		console.log('Error saving upload for later');
+	}
+};
 
 // ------------ Upload Function -----------------
 const axiosConfig = {
@@ -83,7 +91,7 @@ export const uploadFromAwaiting = async (id: string, token: string) => {
 					if (pixRes && pixRes.responseCode === '00') {
 						// update
 						await removeItemFromStorage(uploadID, 'uploadWaiting');
-						await addItemToStorage({...selectedUploadArr[0], uploaded: true}, 'uploadComplete');
+						await addItemToStorage({ ...selectedUploadArr[0], uploaded: true }, 'uploadComplete');
 						return { result: data, success: true };
 					}
 					throw new Error('Error adding student picture');
@@ -100,25 +108,27 @@ export const uploadFromAwaiting = async (id: string, token: string) => {
 };
 
 export const uploadNow = async (payload: object, studentPix: any, token: string) => {
-    const uploadID = await nanoid();
+	const uploadID = await nanoid();
 	axiosConfig.headers.Authorization = `Bearer ${token}`;
 	try {
 		// save item to awaiting uploads first
-		await addItemToStorage({ ...payload, uploadID, uploaded:false, studentPix }, 'uploadWaiting');
+		await addItemToStorage({ ...payload, uploadID, uploaded: false, studentPix }, 'uploadWaiting');
 		const { data } = await axios.post(REGISTER_STUDENT, payload, axiosConfig);
 		if (data && data.responseMessage === 'Successful') {
-            const { studentNo } = data;
-            const {ImageData}  = studentPix;
+			const { studentNo } = data;
+			const { ImageData } = studentPix;
 
-            // read the uri into base64 encoding
-            const imgBase64 = await FileSystem.readAsStringAsync(ImageData, {encoding: FileSystem.EncodingType.Base64});
+			// read the uri into base64 encoding
+			const imgBase64 = await FileSystem.readAsStringAsync(ImageData, {
+				encoding: FileSystem.EncodingType.Base64
+			});
 			const pixPayload = { ...studentPix, studentNo, ImageData: imgBase64 };
-            // post pix
+			// post pix
 			const { data: pixRes } = await axios.post(ADD_STUDENT_PIX, pixPayload, axiosConfig);
 			if (pixRes && pixRes.responseCode === '00') {
 				// update
 				await removeItemFromStorage(uploadID, 'uploadWaiting');
-				await addItemToStorage({ ...payload, uploadID, studentPix, uploaded:true }, 'uploadComplete');
+				await addItemToStorage({ ...payload, uploadID, studentPix, uploaded: true }, 'uploadComplete');
 				return { result: data, success: true };
 			}
 			throw new Error('Picture Upload Failed');
@@ -130,7 +140,6 @@ export const uploadNow = async (payload: object, studentPix: any, token: string)
 		return { error, success: false };
 	}
 };
-
 
 /**
  * object shape

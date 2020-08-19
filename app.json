@@ -7,10 +7,18 @@
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    "androidNavigationBar": {
+      "backgroundColor": "#2D2254",
+      "barStyle": "light-content"
+    },
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#2D2254"
+    },
+    "androidStatusBar": {
+      "barStyle":"light-content",
+      "backgroundColor": "#2D2254"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

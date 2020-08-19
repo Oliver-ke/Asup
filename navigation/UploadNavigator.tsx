@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { UploadScreen, AddStudentScreen } from '../screens';
+import { UploadScreen, AddStudentScreen, DetailScreen } from '../screens';
 import { UploadParamList } from '../types';
 const UploadStack = createStackNavigator<UploadParamList>();
 
@@ -12,6 +12,11 @@ const UploadNavigator = () => {
 				name="AddStudent"
 				component={AddStudentScreen}
 				options={{ headerTitle: 'Upload New Student' }}
+			/>
+			<UploadStack.Screen
+				name="Detail"
+				component={DetailScreen}
+				options={{ headerTitle: 'Registration Details' }}
 			/>
 		</UploadStack.Navigator>
 	);

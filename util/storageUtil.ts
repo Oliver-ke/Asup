@@ -78,7 +78,7 @@ export const prepareRegAssets = async (schoolId: number, token: string) => {
 	const assestStr = await AsyncStorage.getItem('assets');
 	if (assestStr) {
 		const assets = JSON.parse(assestStr);
-		if (Object.keys(assets).length >= 5) {
+		if (Object.keys(assets).length >= 3) {
 			return { success: true, assets };
 		}
 	}

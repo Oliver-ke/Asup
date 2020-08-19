@@ -7,6 +7,12 @@ export default StyleSheet.create({
 		flex: 1,
 		marginTop: constants.statusBarHeight
 	},
+	spinner: {
+		backgroundColor: '#fff',
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
 	header: {
 		backgroundColor: colors.light.primaryColor,
 		height: 70,

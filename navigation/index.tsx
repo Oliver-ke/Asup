@@ -45,8 +45,10 @@ const RootNavigator = () => {
 					const userInfo = JSON.parse(userInfoStr);
 					const savedState = { ...userInfo };
 					dispatch({ type: 'LOGIN', payload: savedState });
-					setAuthLoading(false);
+					return setAuthLoading(false);
 				}
+				dispatch({type: 'LOGOUT'})
+				return setAuthLoading(false);
 			} catch (error) {
 				console.log(error);
 			}

@@ -1,17 +1,41 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, Alert, ActivityIndicator } from 'react-native';
 import { Text } from 'react-native-elements';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import colors from '../../constants/Colors';
+import { getItemsFromStorage } from '../../util/uploadHandler';
 import { AuthContext } from '../../context/AuthContext';
 import StudentCard from '../../components/studentCard/StudentCard';
-import students from '../../mockData/students';
 import SearchInput from '../../components/searchInput/SearchInput';
 
 import styles from './styles';
 const HomeScreen = () => {
 	const { state: { schoolCode } } = useContext(AuthContext);
+	const [ successfulUploads, setSuccessfulUploads ] = useState<null | []>([]);
+	const [loading, setLoading] = useState(true);
+	useEffect(() => {
+		(async () => {
+			try {
+				const uploadSuccess = await getItemsFromStorage('uploadComplete');
+				console.log(uploadSuccess);
+				setSuccessfulUploads(uploadSuccess);
+				setLoading(false);
+			} catch (error) {
+				console.log(error);
+				Alert.alert('Error', 'Ops! something went wrong');
+			}
+		})();
+	}, []);
+
+	if(loading && successfulUploads === null){
+		return (
+			<View style={styles.spinner}>
+				<ActivityIndicator size="large" />
+			</View>
+		)
+	}
+
 	return (
 		<View style={styles.container}>
 			<StatusBar backgroundColor={colors.light.primaryColor} style="inverted" />
@@ -29,8 +53,8 @@ const HomeScreen = () => {
 					<MaterialCommunityIcons name="upload-outline" size={24} color={colors.light.secondaryColor} />
 				</View>
 				<FlatList
-					data={[]}
-					keyExtractor={(item) => item.id.toString()}
+					data={successfulUploads}
+					keyExtractor={(item: any) => item.uploadID}
 					renderItem={({ item }) => <StudentCard student={item} />}
 					contentContainerStyle={{ paddingHorizontal: 10, flexGrow: 1 }}
 				/>
@@ -39,6 +63,4 @@ const HomeScreen = () => {
 	);
 };
 
-
 export default HomeScreen;
-
