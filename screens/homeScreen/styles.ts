@@ -40,5 +40,14 @@ export default StyleSheet.create({
 		fontFamily: 'lato',
 		marginRight: 10,
 		marginLeft: 10
+	},
+	emptyMssg: {
+		width: '100%',
+		alignItems: 'center',
+		marginTop: '50%'
+	},
+	emptyText: {
+		fontSize: 20,
+		marginBottom: 10
 	}
 });

@@ -82,12 +82,19 @@ export const uploadFromAwaiting = async (id: string, token: string) => {
 			const parsedAwaitingUploads = JSON.parse(awaitingUploads);
 			const selectedUploadArr = parsedAwaitingUploads.filter((upload: any) => upload.uploadID === id);
 			if (selectedUploadArr.length > 0 && 1) {
+				console.log(selectedUploadArr[0]);
 				const { uploadID, studentPix, ...mainInfo } = selectedUploadArr[0];
 				const { data } = await axios.post(REGISTER_STUDENT, mainInfo, axiosConfig);
 				if (data && data.responseMessage === 'Successful') {
-					const { studentNo } = data;
-					const pixPayload = { ...studentPix, studentNo };
+					const { studentNo: StudentNo } = data;
+					const { ImageData } = studentPix;
+					// read the uri into base64 encoding
+					const imgBase64 = await FileSystem.readAsStringAsync(ImageData, {
+						encoding: FileSystem.EncodingType.Base64
+					});
+					const pixPayload = { ...studentPix, StudentNo, ImageData: imgBase64 };
 					const { data: pixRes } = await axios.post(ADD_STUDENT_PIX, pixPayload, axiosConfig);
+					console.log(pixRes);
 					if (pixRes && pixRes.responseCode === '00') {
 						// update
 						await removeItemFromStorage(uploadID, 'uploadWaiting');
@@ -115,14 +122,14 @@ export const uploadNow = async (payload: object, studentPix: any, token: string)
 		await addItemToStorage({ ...payload, uploadID, uploaded: false, studentPix }, 'uploadWaiting');
 		const { data } = await axios.post(REGISTER_STUDENT, payload, axiosConfig);
 		if (data && data.responseMessage === 'Successful') {
-			const { studentNo } = data;
+			const { studentNo: StudentNo } = data;
 			const { ImageData } = studentPix;
 
 			// read the uri into base64 encoding
 			const imgBase64 = await FileSystem.readAsStringAsync(ImageData, {
 				encoding: FileSystem.EncodingType.Base64
 			});
-			const pixPayload = { ...studentPix, studentNo, ImageData: imgBase64 };
+			const pixPayload = { ...studentPix, StudentNo, ImageData: imgBase64 };
 			// post pix
 			const { data: pixRes } = await axios.post(ADD_STUDENT_PIX, pixPayload, axiosConfig);
 			if (pixRes && pixRes.responseCode === '00') {

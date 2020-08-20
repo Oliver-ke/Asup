@@ -4,11 +4,11 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import colors from '../../constants/Colors';
 import { LOGIN } from '../../constants/endpoint';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { View } from 'react-native';
+import { View, Alert } from 'react-native';
 import { Buffer } from 'buffer';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Button, Image, Input, Text } from 'react-native-elements';
-import {AuthContext} from '../../context/AuthContext';
+import { AuthContext } from '../../context/AuthContext';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import styles from './styles';
@@ -18,14 +18,14 @@ const LoginScreen = () => {
 		SchoolCode: '',
 		PassCode: '',
 		AdminPhoneNumber: ''
-    });
-    const [loading, setLoading] = useState(false);
-    const {dispatch} = useContext(AuthContext);
+	});
+	const [ loading, setLoading ] = useState(false);
+	const { dispatch } = useContext(AuthContext);
 	const handleLoginClick = async () => {
 		const { PassCode, AdminPhoneNumber, SchoolCode } = formInput;
 		if (!PassCode || !AdminPhoneNumber || !SchoolCode) return;
 		try {
-            setLoading(true)
+			setLoading(true);
 			const clientId = process.env.CLIENT_ID || '';
 			const secretKey = process.env.SECRET_KEY || '';
 			const key = new Buffer(`${clientId}:${secretKey}`).toString('base64');
@@ -41,23 +41,28 @@ const LoginScreen = () => {
 					Authorization: `Bearer ${key}`
 				}
 			};
-			const {data: {authToken, adminPhoneNumber, schoolCode, schoolID}} = await axios.post(LOGIN, payload, config);
+			const { data: { authToken, adminPhoneNumber, schoolCode, schoolID } } = await axios.post(
+				LOGIN,
+				payload,
+				config
+			);
 			// save to async storage and dispatch to store;
-			const storePayload =  {authToken, adminPhoneNumber, schoolCode, schoolID}
-			dispatch({type: 'LOGIN', payload: storePayload})
+			const storePayload = { authToken, adminPhoneNumber, schoolCode, schoolID };
+			dispatch({ type: 'LOGIN', payload: storePayload });
 			const payloadStr = JSON.stringify(storePayload);
-			await AsyncStorage.setItem("userInfo", payloadStr);
-            setLoading(false);
+			await AsyncStorage.setItem('userInfo', payloadStr);
+			setLoading(false);
 		} catch (error) {
 			// show error to user
-            console.log(error);
-            setLoading(false)
+			console.log(error);
+			setLoading(false);
+			Alert.alert('Login Failed', "You've provided an invalid credentials");
 		}
 	};
 	return (
 		<View style={styles.container}>
 			<StatusBar backgroundColor={colors.light.primaryColor} style="light" />
-			<Spinner textStyle={{color: '#f4f4f4'}} visible={loading} textContent={'Loading...'} />
+			<Spinner textStyle={{ color: '#f4f4f4' }} visible={loading} textContent={'Loading...'} />
 			<View style={styles.header}>
 				<Image
 					resizeMode="center"
@@ -65,7 +70,7 @@ const LoginScreen = () => {
 					source={require('../../assets/images/logo.png')}
 				/>
 			</View>
-			<KeyboardAwareScrollView contentContainerStyle={{ flex: 6 }}>
+			<KeyboardAwareScrollView keyboardShouldPersistTaps="always" contentContainerStyle={{ flex: 6 }}>
 				<View style={styles.formInput}>
 					<Text
 						h4
@@ -123,6 +128,5 @@ const LoginScreen = () => {
 		</View>
 	);
 };
-
 
 export default LoginScreen;

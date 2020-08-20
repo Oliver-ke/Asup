@@ -1,12 +1,16 @@
 {
   "expo": {
-    "name": "Asup",
-    "slug": "Asup",
+    "name": "Absup",
+    "slug": "Absup",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    "android": {
+      "package": "com.nortify.absup",
+      "versionCode": 1
+    },
     "androidNavigationBar": {
       "backgroundColor": "#2D2254",
       "barStyle": "light-content"
@@ -27,7 +31,9 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.nortify.absup",
+      "buildNumber": "1.0.0"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"

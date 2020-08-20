@@ -19,7 +19,6 @@ const SchoolInfo: FC<SchoolInfoProps> = ({ onNextPress, onPrevPress, classes, ac
 	const [ inputs, setInputs ] = useState({...schoolInfo});
 	const onInputChange = (name: string, value: any) => setInputs({ ...inputs, [name]: value });
 	const onComplete = () => {
-		console.log(inputs);
 		const { AdmissionDate, ClassAdmittedID, TermAdmitted, YearOfAdmission, CurrentClassID } = inputs;
 		if (!AdmissionDate || !ClassAdmittedID || !TermAdmitted || !YearOfAdmission || !CurrentClassID) {
 			//return;
@@ -30,7 +29,7 @@ const SchoolInfo: FC<SchoolInfoProps> = ({ onNextPress, onPrevPress, classes, ac
 	};
 	return (
 		<View style={styles.container}>
-			<ScrollView contentContainerStyle={styles.scrollContainer}>
+			<ScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.scrollContainer}>
 				<Text h4Style={styles.headerText} h4>
 					School Details
 				</Text>

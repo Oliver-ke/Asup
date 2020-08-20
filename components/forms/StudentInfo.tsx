@@ -17,7 +17,6 @@ const StudentInfo: FC<StudentInfoProps> = ({ onNextPress, navigation, states, lo
 	const [filteredLGA, setFilteredLGA] = useState<any>(localGov);
 	const { state: { schoolCode: SchoolCode } } = useContext(AuthContext);
 	const onInputChange = (name: string, value: any) => setInput({ ...input, [name]: value });
-
 	// filter localgov on state change
 	useEffect(() => {
 		// run filter
@@ -26,8 +25,6 @@ const StudentInfo: FC<StudentInfoProps> = ({ onNextPress, navigation, states, lo
 	}, [input.StateOfOriginID])
 
 	const onComplete = () => {
-		// run data validation
-		console.log(input);
 		const { LastName, FirstName, OtherName, Gender, DateOfBirth, StateOfOriginID, LGAOfOriginID } = input;
 		if (!LastName || !FirstName || !OtherName || !Gender || !DateOfBirth || !StateOfOriginID || !LGAOfOriginID) {
 			//return;
@@ -39,7 +36,7 @@ const StudentInfo: FC<StudentInfoProps> = ({ onNextPress, navigation, states, lo
 
 	return (
 		<View style={styles.container}>
-			<ScrollView contentContainerStyle={styles.scrollContainer}>
+			<ScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.scrollContainer}>
 				<Text h4Style={styles.headerText} h4>
 					Student Details
 			    </Text>

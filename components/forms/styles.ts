@@ -12,7 +12,6 @@ export default StyleSheet.create({
 		justifyContent: 'space-between'
 	},
 	contenContainer: {
-		//backgroundColor: '#fff',
 		paddingVertical: 20,
 		paddingHorizontal: 20,
 		borderRadius: 5,

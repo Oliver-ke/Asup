@@ -7,7 +7,6 @@ import { StudentInfo, SchoolInfo, ParentInfo, StudentPix } from '../../component
 import { AddStudentScreenNavigationProp } from '../../types';
 import SubmitModal from '../../components/submitModal/SubmitModal';
 import { uploadNow, saveForLater } from '../../util/uploadHandler';
-import storageLogger from '../../util/storageLogger';
 import styles from './styles';
 
 type AddStudentScreenProps = {
@@ -37,7 +36,6 @@ const AddStudentScreen: FC<AddStudentScreenProps> = ({ navigation }) => {
 			if (res && res.assets) {
 				setRegAssets(res.assets);
 				studentDispatch({ type: studentTypes.RESET_DATA });
-				storageLogger();
 			}
 		})();
 	}, []);
@@ -66,7 +64,7 @@ const AddStudentScreen: FC<AddStudentScreenProps> = ({ navigation }) => {
 				setUploadLoading(false);
 				setShowSubmitModal(false);
 				Alert.alert('Upload Status', 'Uploading Student Successful');
-				navigation.navigate('Uploads');
+				return navigation.navigate('Uploads');
 			}
 			throw new Error('Upload Failed');
 		} catch (error) {

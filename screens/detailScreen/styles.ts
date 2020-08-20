@@ -10,10 +10,11 @@ export default StyleSheet.create({
 		marginTop: 20
     },
     deleteWrapper: {
-        marginBottom: -30,
+        marginBottom: -20,
         width: '100%',
         paddingRight: 8,
-        alignItems: 'flex-end'
+		alignItems: 'flex-end',
+		//backgroundColor: '#000'
     },
 	profileImage: {
 		width: 150,

@@ -2,11 +2,12 @@ import React, { FC, ReactElement, useEffect, useState, useContext } from 'react'
 import { AuthContext } from '../../context/AuthContext';
 import { Text, View, Image, Alert, ActivityIndicator } from 'react-native';
 import { prepareRegAssets } from '../../util/storageUtil';
+import Spinner from 'react-native-loading-spinner-overlay';
 import { Button } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Feather, AntDesign } from '@expo/vector-icons';
 import DetailField from '../../components/detailField/DetailField';
-import { getItemFromStorage, removeItemFromStorage } from '../../util/uploadHandler';
+import { getItemFromStorage, removeItemFromStorage, uploadFromAwaiting } from '../../util/uploadHandler';
 import { DetailScreenNavigationProp } from '../../types';
 import styles from './styles';
 
@@ -29,6 +30,7 @@ const term = [
 const DetailScreen: FC<detailScreenType> = ({ navigation, route }): ReactElement => {
 	const { uploadID, uploaded } = route.params;
 	const [ studentInfo, setStudentInfo ] = useState<any>(null);
+	const [ uploadLoading, setUpladLoading ] = useState(false);
 	const [ loadingDetail, setLoadingDetail ] = useState(false);
 	const [ regAssets, setRegAssets ] = useState({
 		accademicSession: [],
@@ -39,11 +41,25 @@ const DetailScreen: FC<detailScreenType> = ({ navigation, route }): ReactElement
 	const { state: { schoolID, authToken } } = useContext(AuthContext);
 
 	const pickItemFromID = (id: string, items: any) => {
-        console.log(id, items);
-        return 'None';
-		// const value = items.filter((item: any) => item.value === id)[0].label;
-		// console.log(value);
-		// return value;
+		const value = items.filter((item: any) => item.value === id)[0].label;
+		return value;
+	};
+
+	const handleUploadPressed = async () => {
+		setUpladLoading(true);
+		try {
+			const { success } = await uploadFromAwaiting(uploadID, authToken);
+			if (success) {
+				setUpladLoading(false);
+				Alert.alert('Good', 'Your upload was successful');
+				return navigation.navigate('Uploads');
+			}
+			setUpladLoading(false);
+			return Alert.alert('Error', 'Uploading failed');
+		} catch (error) {
+			console.log(error);
+			setUpladLoading(false);
+		}
 	};
 
 	const handleDeletePressed = () => {
@@ -100,7 +116,6 @@ const DetailScreen: FC<detailScreenType> = ({ navigation, route }): ReactElement
 	}, []);
 
 	if (loadingDetail || !studentInfo) {
-		console.log('Spinning');
 		return <ActivityIndicator size="large" />;
 	}
 
@@ -130,6 +145,7 @@ const DetailScreen: FC<detailScreenType> = ({ navigation, route }): ReactElement
 
 	return (
 		<View style={{ ...styles.container }}>
+			<Spinner textStyle={{ color: '#f4f4f4' }} visible={uploadLoading} textContent={'Loading...'} />
 			<ScrollView
 				contentContainerStyle={styles.scrollContainer}
 				contentInset={{
@@ -151,20 +167,34 @@ const DetailScreen: FC<detailScreenType> = ({ navigation, route }): ReactElement
 						<Text
 							style={{ fontSize: 17, fontWeight: '700', color: '#333' }}
 						>{`${LastName} ${FirstName} ${OtherName}`}</Text>
-						<Text style={{ color: '#333' }}>
-							Status:
+						<View style={{}}>
 							{uploaded ? (
-								<Text style={{ color: 'green' }}>
-									{' '}
-									Uploaded <Feather name="check" size={12} color="green" />
+								<Text style={{ color: '#333' }}>
+									Status
+									<Text style={{ color: 'green' }}>
+										{' '}
+										Uploaded <Feather name="check" size={12} color="green" />
+									</Text>
 								</Text>
 							) : (
-								<Text style={{ color: 'red' }}>
-									{' '}
-									Waiting <AntDesign name="retweet" size={12} color="red" />
-								</Text>
+								<View>
+									<Text style={{ color: '#333' }}>
+										Status
+										<Text style={{ color: 'red' }}>
+											{' '}
+											Waiting <AntDesign name="retweet" size={12} color="red" />
+										</Text>
+									</Text>
+									<Button
+										onPress={handleUploadPressed}
+										buttonStyle={{ borderRadius: 20, marginTop: 5 }}
+										icon={{ name: 'upload', color: '#fff', type: 'antdesign', size: 20 }}
+										title="Upload"
+									/>
+								</View>
 							)}
-						</Text>
+						</View>
+						{/* Need to add Upload Now button */}
 					</View>
 					<DetailField label="Gender" value={Gender} />
 					<DetailField label="Class Admitted" value={pickItemFromID(ClassAdmittedID, regAssets.classes)} />

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { View, FlatList, Alert, ActivityIndicator } from 'react-native';
 import { Text } from 'react-native-elements';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, EvilIcons } from '@expo/vector-icons';
 import colors from '../../constants/Colors';
 import { getItemsFromStorage } from '../../util/uploadHandler';
 import { AuthContext } from '../../context/AuthContext';
@@ -18,7 +18,6 @@ const HomeScreen = () => {
 		(async () => {
 			try {
 				const uploadSuccess = await getItemsFromStorage('uploadComplete');
-				console.log(uploadSuccess);
 				setSuccessfulUploads(uploadSuccess);
 				setLoading(false);
 			} catch (error) {
@@ -52,12 +51,19 @@ const HomeScreen = () => {
 					</Text>
 					<MaterialCommunityIcons name="upload-outline" size={24} color={colors.light.secondaryColor} />
 				</View>
-				<FlatList
+				{successfulUploads?.length === 0 ? (
+					<View style={styles.emptyMssg}>
+						<Text style={styles.emptyText}>You have no uploads yet</Text>
+						<EvilIcons name="archive" size={35} color="black" />
+					</View>
+				) : (
+					<FlatList
 					data={successfulUploads}
 					keyExtractor={(item: any) => item.uploadID}
 					renderItem={({ item }) => <StudentCard student={item} />}
 					contentContainerStyle={{ paddingHorizontal: 10, flexGrow: 1 }}
 				/>
+				)}
 			</View>
 		</View>
 	);

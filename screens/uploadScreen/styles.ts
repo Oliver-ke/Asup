@@ -39,5 +39,14 @@ export default StyleSheet.create({
 		color: 'rgba(0,0,0,0.8)',
 		fontFamily: 'lato',
 		marginRight: 10
+	},
+	emptyMssg: {
+		width: '100%',
+		alignItems: 'center',
+		marginTop: '50%'
+	},
+	emptyText: {
+		fontSize: 20,
+		marginBottom: 10
 	}
 });
