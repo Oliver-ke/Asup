@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, FC } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { View, FlatList, Alert, ActivityIndicator } from 'react-native';
 import { Text } from 'react-native-elements';
@@ -6,12 +6,19 @@ import { MaterialCommunityIcons, EvilIcons } from '@expo/vector-icons';
 import colors from '../../constants/Colors';
 import { getItemsFromStorage } from '../../util/uploadHandler';
 import { AuthContext } from '../../context/AuthContext';
+import HomeNavButton from '../../components/HomeNavBtn/HomeNavButton';
 import StudentCard from '../../components/studentCard/StudentCard';
 import SearchInput from '../../components/searchInput/SearchInput';
-
+import SearchResult from '../../components/searchResult/SearchResult';
 import styles from './styles';
-const HomeScreen = () => {
+
+type HomeScreenProps = {
+	navigateParent: (parentName: string, screen: string) => void
+};
+
+const HomeScreen :FC<HomeScreenProps> = ({navigateParent}) => {
 	const { state: { schoolCode } } = useContext(AuthContext);
+	const [searchQuery, setSearchQuery] = useState('');
 	const [ successfulUploads, setSuccessfulUploads ] = useState<null | []>([]);
 	const [loading, setLoading] = useState(true);
 	useEffect(() => {
@@ -42,9 +49,26 @@ const HomeScreen = () => {
 				<Text h4Style={styles.welcomeTxt} h4>
 					Welcome, School <Text style={styles.welcomeTxtBold}>{schoolCode}</Text>
 				</Text>
-				<SearchInput />
+				<SearchInput onSubmit={(txt) => setSearchQuery(txt)}/>
 			</View>
-			<View style={{ flex: 1 }}>
+			{searchQuery && searchQuery !== '' ? (
+				<SearchResult query={searchQuery}/>
+			) : (
+				<View style={{ flex: 1 }}>
+				<View style={styles.navBtnWrapper}>
+					<HomeNavButton 
+						color="#6B2A6D" 
+						icon={{name: 'md-person-add', type:'ionicon', color:"#fff"}} 
+						text="Register Student" 
+						clickHandler={() => navigateParent('Uploads', 'AddStudent')} 
+					/>
+					<HomeNavButton 
+						color="#0068A2" 
+						text="View Uploads" 
+						icon={{name: 'upload', type:'antdesign', color:"#fff"}} 
+						clickHandler={() => navigateParent('Uploads', 'Uploads')} 
+					/>
+				</View>
 				<View style={styles.mainTitlWrapper}>
 					<Text h4Style={styles.mainText} h4>
 						Successful Uploads
@@ -65,6 +89,7 @@ const HomeScreen = () => {
 				/>
 				)}
 			</View>
+			)}
 		</View>
 	);
 };

@@ -34,6 +34,12 @@ export default StyleSheet.create({
 		marginTop: 10,
 		paddingVertical: 10
 	},
+	navBtnWrapper: {
+		paddingHorizontal: 10,
+		marginTop: 20,
+		flexDirection: 'row',
+		justifyContent: 'space-between'
+	},
 	mainText: {
 		fontSize: 20,
 		color: 'rgba(0,0,0,0.8)',

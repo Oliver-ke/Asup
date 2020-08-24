@@ -3,8 +3,17 @@ import { View, TextInput, TextInputProps } from 'react-native';
 import styles from './styles';
 import { Ionicons } from '@expo/vector-icons';
 
-const SearchInput: FC<TextInputProps> = ({...props}): ReactElement => {
+interface searchInputProps extends TextInputProps {
+	onSubmit: (query: string) => void;
+}
+
+const SearchInput: FC<searchInputProps> = ({onSubmit,...props}): ReactElement => {
 	const [ newStyles, setNewStyles ] = useState({ borderColor: '#392D60' });
+	const [input, setInput] = useState('');
+	const handleInputChange = (txt:string) => {
+		setInput(txt);
+		if(txt === '') return onSubmit('');
+	}
 	const toggleBorderColor = () => {
 		const { borderColor } = newStyles;
 		if (borderColor === '#7F6FA9') {
@@ -20,7 +29,10 @@ const SearchInput: FC<TextInputProps> = ({...props}): ReactElement => {
 				onBlur={toggleBorderColor}
 				onFocus={toggleBorderColor}
 				style={styles.input}
+				value={input}
+				onChangeText={handleInputChange}
 				placeholder="Search Uploads"
+				onSubmitEditing={({nativeEvent: {text}}) =>  onSubmit(text)}
 			/>
 		</View>
 	);

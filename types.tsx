@@ -14,7 +14,7 @@ export type BottomTabParamList = {
 
 export type DashboardParamList = {
   Home: undefined;
-  Detail: undefined;
+  Detail: undefined; 
 };
 
 export type UploadParamList = {
@@ -23,8 +23,6 @@ export type UploadParamList = {
   Detail: undefined;
 };
 
-
 export type UploadScreenNavigationProp = StackNavigationProp<UploadParamList, 'Uploads'>
 export type AddStudentScreenNavigationProp = StackNavigationProp<UploadParamList, 'AddStudent'>
 export type DetailScreenNavigationProp = StackNavigationProp<UploadParamList, 'Detail'>
-

@@ -10,6 +10,29 @@ export const clearStorage = async () => {
 	return console.log('Items cleared');
 };
 
+export const searchStorage = async (query: string) => {
+	// get all items in storage
+	try {
+		const awaitingJson = await AsyncStorage.getItem('uploadWaiting') || '';
+		const uploadedJson = await AsyncStorage.getItem('uploadComplete') || '';
+		if(awaitingJson && uploadedJson){
+			const awaiting = JSON.parse(awaitingJson) || [];
+			const uploaded = JSON.parse(uploadedJson) || [];
+			const payload = [...awaiting, ...uploaded]; 
+			const searchStr = query.toLowerCase();
+			const searchResult = payload.filter((student) => {
+				const name = `${student.FirstName} ${student.LastName}`.toLowerCase();
+				return name.includes(searchStr);
+			});
+			return searchResult;
+		}
+		return [];
+	} catch (error) {
+		console.log(error);
+		return {success: false, error}
+	}
+}
+
 export const addItemToStorage = async (newItem: object, key: string) => {
 	const pack = await AsyncStorage.getItem(key);
 	// check if pack exist on async storage
