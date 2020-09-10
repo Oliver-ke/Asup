@@ -12,6 +12,8 @@ const SearchInput: FC<searchInputProps> = ({onSubmit,...props}): ReactElement =>
 	const [input, setInput] = useState('');
 	const handleInputChange = (txt:string) => {
 		setInput(txt);
+		// added next line recently -> with-stack-navigator
+		onSubmit(txt);
 		if(txt === '') return onSubmit('');
 	}
 	const toggleBorderColor = () => {

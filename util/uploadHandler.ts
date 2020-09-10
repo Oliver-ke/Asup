@@ -33,6 +33,24 @@ export const searchStorage = async (query: string) => {
 	}
 }
 
+export const getUploadStatistics = async () => {
+	try {
+		const awaitingJson = await AsyncStorage.getItem('uploadWaiting') || '';
+		const uploadedJson = await AsyncStorage.getItem('uploadComplete') || '';
+		const numAwaiting = awaitingJson ? JSON.parse(awaitingJson): [];
+		const numUploaded = uploadedJson ? JSON.parse(uploadedJson) : [];
+		return {
+			totalUploads: numAwaiting.length + numUploaded.length,
+			awaitingUploads: numAwaiting.length,
+			completedUploads: numUploaded.length,
+		}
+	} catch (error) {
+		console.log(error);
+		// lets not panic the user, lets just return zero, an engineer would see this
+		return {totalUploads: 0, awaitingUploads: 0, completedUpload: 0};
+	}
+}
+
 export const addItemToStorage = async (newItem: object, key: string) => {
 	const pack = await AsyncStorage.getItem(key);
 	// check if pack exist on async storage

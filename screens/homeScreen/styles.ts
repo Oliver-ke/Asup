@@ -55,5 +55,26 @@ export default StyleSheet.create({
 	emptyText: {
 		fontSize: 20,
 		marginBottom: 10
+	},
+	lineWrapper: {
+		flexDirection: 'row',
+		width: '100%',
+		height: 20,
+		marginVertical: 10,
+		alignItems: 'center',
+		justifyContent: 'space-between',
+		paddingHorizontal: 10
+	},
+	line: {
+		height: 2,
+		width: '47%',
+		backgroundColor: '#ccc',
+		borderRadius: 20
+	},
+	dot: {
+		height: 10,
+		width: 10,
+		borderRadius: 20,
+		backgroundColor: '#ccc'
 	}
 });

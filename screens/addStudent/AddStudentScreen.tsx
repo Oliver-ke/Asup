@@ -64,6 +64,7 @@ const AddStudentScreen: FC<AddStudentScreenProps> = ({ navigation }) => {
 				setUploadLoading(false);
 				setShowSubmitModal(false);
 				Alert.alert('Upload Status', 'Uploading Student Successful');
+				setStep(1);
 				return navigation.navigate('Uploads');
 			}
 			throw new Error('Upload Failed');
@@ -85,6 +86,7 @@ const AddStudentScreen: FC<AddStudentScreenProps> = ({ navigation }) => {
 			setUploadLoading(false);
 			setShowSubmitModal(false);
 			Alert.alert('Upload Status', 'Upload Successfully Saved for Later');
+			setStep(1);
 		    navigation.navigate('Uploads');
 		} catch (error) {
 			console.log(error);

@@ -202,7 +202,7 @@ const DetailScreen: FC<detailScreenType> = ({ navigation, route }): ReactElement
 					<DetailField label="Current Class" value={pickItemFromID(CurrentClassID, regAssets.classes)} />
 					<DetailField label="Admission Date" value={new Date(AdmissionDate).toLocaleDateString()} />
 					<DetailField label="Year of Admission" value={YearOfAdmission} />
-					<DetailField label="Date of Birth" value={new Date(DateOfBirth).toLocaleString()} />
+					<DetailField label="Date of Birth" value={new Date(DateOfBirth).toLocaleDateString()} />
 					<DetailField label="State of Origin" value={pickItemFromID(StateOfOriginID, regAssets.states)} />
 					<DetailField label="LGA of Origin" value={pickItemFromID(LGAOfOriginID, regAssets.localGov)} />
 					<DetailField
